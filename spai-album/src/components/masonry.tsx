@@ -1,7 +1,13 @@
 'use client'
+
 import { useState, useEffect } from 'react'
 import { supabase } from '../supabaseClient'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle
+} from '@/components/ui/dialog'
 
 interface UserInteraction {
   id: number
@@ -10,6 +16,28 @@ interface UserInteraction {
   conversation_summary: string
   image_url: string
   created_at: string
+}
+
+interface InteractionCardProps {
+  interaction: UserInteraction
+  onSelect: (interaction: UserInteraction) => void
+}
+
+function InteractionCard({ interaction, onSelect }: InteractionCardProps) {
+  return (
+    <div className="relative overflow-hidden rounded-lg cursor-pointer" onClick={() => onSelect(interaction)}>
+      <img
+        src={interaction.image_url}
+        alt={interaction.name}
+        className="h-48 w-full object-cover rounded-lg"
+      />
+      <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/40 to-transparent">
+        <h3 className="text-white text-md font-medium truncate">
+          {interaction.name}
+        </h3>
+      </div>
+    </div>
+  )
 }
 
 export default function MasonryGallery() {
@@ -64,30 +92,18 @@ export default function MasonryGallery() {
         />
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
         {filteredInteractions.map((interaction) => (
-          <div key={interaction.id} className="grid gap-4">
-            <div
-              className="relative overflow-hidden rounded-lg cursor-pointer"
-              onClick={() => setSelectedInteraction(interaction)}
-            >
-              <img
-                src={interaction.image_url}
-                alt={interaction.name}
-                className="h-auto max-w-full rounded-lg"
-              />
-              <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/40 to-transparent">
-                <h3 className="text-white text-sm font-medium truncate">
-                  {interaction.name}
-                </h3>
-              </div>
-            </div>
-          </div>
+          <InteractionCard
+            key={interaction.id}
+            interaction={interaction}
+            onSelect={setSelectedInteraction}
+          />
         ))}
       </div>
 
-      <Dialog 
-        open={!!selectedInteraction} 
+      <Dialog
+        open={!!selectedInteraction}
         onOpenChange={() => setSelectedInteraction(null)}
       >
         {selectedInteraction && (

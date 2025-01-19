@@ -1,0 +1,13 @@
+@font-face {
+    font-family: 'Quicksand';
+    src: url('/fonts/quicksand/Quicksand-Semibold.woff2') format('woff2'),
+         url('/fonts/quicksand/Quicksand-Semibold.woff') format('woff'),
+         url('/fonts/quicksand/Quicksand-Semibold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+  }
+
+  h1, h2, h3 {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+  }
