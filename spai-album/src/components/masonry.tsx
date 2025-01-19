@@ -1,46 +1,51 @@
 'use client'
-
 import { useState, useEffect } from 'react'
 import { supabase } from '../supabaseClient'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 
-interface Photo {
+interface UserInteraction {
   id: number
-  src: string
-  title: string
-  description: string
+  user_id: string
+  name: string
+  conversation_summary: string
+  image_url: string
+  created_at: string
 }
 
 export default function MasonryGallery() {
-  const [photos, setPhotos] = useState<Photo[]>([])
-  const [filteredPhotos, setFilteredPhotos] = useState<Photo[]>([])
-  const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null)
+  const [interactions, setInteractions] = useState<UserInteraction[]>([])
+  const [filteredInteractions, setFilteredInteractions] = useState<UserInteraction[]>([])
+  const [selectedInteraction, setSelectedInteraction] = useState<UserInteraction | null>(null)
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
-    async function fetchPhotos() {
-      const { data, error } = await supabase.from('photos').select<'*', Photo>('*')
+    async function fetchInteractions() {
+      const { data, error } = await supabase
+        .from('user_interactions')
+        .select('*')
+        .order('created_at', { ascending: false })
+
       if (error) {
-        console.error('Error fetching photos:', error)
+        console.error('Error fetching interactions:', error)
       } else if (data) {
-        setPhotos(data)
-        setFilteredPhotos(data)
+        setInteractions(data)
+        setFilteredInteractions(data)
       }
       setLoading(false)
     }
-    fetchPhotos()
-  }, []) 
+    fetchInteractions()
+  }, [])
 
-  // Filter photos based on search query
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value.toLowerCase()
     setSearchQuery(query)
 
-    const filtered = photos.filter((photo) =>
-      photo.title.toLowerCase().includes(query)
+    const filtered = interactions.filter((interaction) =>
+      interaction.name.toLowerCase().includes(query) ||
+      interaction.conversation_summary.toLowerCase().includes(query)
     )
-    setFilteredPhotos(filtered)
+    setFilteredInteractions(filtered)
   }
 
   if (loading) {
@@ -49,33 +54,31 @@ export default function MasonryGallery() {
 
   return (
     <div className="container mx-auto px-4 py-8 bg-white">
-      {/* Search Bar */}
       <div className="mb-6">
         <input
           type="text"
           value={searchQuery}
           onChange={handleSearch}
-          placeholder="Search by title..."
+          placeholder="Search by name or conversation..."
           className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
-      {/* Masonry Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {filteredPhotos.map((photo) => (
-          <div key={photo.id} className="grid gap-4">
+        {filteredInteractions.map((interaction) => (
+          <div key={interaction.id} className="grid gap-4">
             <div
               className="relative overflow-hidden rounded-lg cursor-pointer"
-              onClick={() => setSelectedPhoto(photo)}
+              onClick={() => setSelectedInteraction(interaction)}
             >
               <img
-                src={photo.src}
-                alt={photo.title}
+                src={interaction.image_url}
+                alt={interaction.name}
                 className="h-auto max-w-full rounded-lg"
               />
               <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/40 to-transparent">
                 <h3 className="text-white text-sm font-medium truncate">
-                  {photo.title}
+                  {interaction.name}
                 </h3>
               </div>
             </div>
@@ -83,21 +86,25 @@ export default function MasonryGallery() {
         ))}
       </div>
 
-      {/* Dialog for Selected Photo */}
-      <Dialog open={!!selectedPhoto} onOpenChange={() => setSelectedPhoto(null)}>
-        {selectedPhoto && (
-          <DialogContent className="max-w-2xl bg-white rounded-xl"> {/* Added rounded-xl */}
+      <Dialog 
+        open={!!selectedInteraction} 
+        onOpenChange={() => setSelectedInteraction(null)}
+      >
+        {selectedInteraction && (
+          <DialogContent className="max-w-2xl bg-white rounded-xl">
             <DialogHeader>
-              <DialogTitle>{selectedPhoto.title}</DialogTitle>
+              <DialogTitle>{selectedInteraction.name}</DialogTitle>
             </DialogHeader>
             <div className="relative w-full h-auto">
               <img
-                src={selectedPhoto.src}
-                alt={selectedPhoto.title}
+                src={selectedInteraction.image_url}
+                alt={selectedInteraction.name}
                 className="object-cover rounded-md"
               />
             </div>
-            <p className="text-gray-700 mt-2">{selectedPhoto.description}</p>
+            <p className="text-gray-700 mt-2">
+              Conversation Summary: {selectedInteraction.conversation_summary}
+            </p>
           </DialogContent>
         )}
       </Dialog>
