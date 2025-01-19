@@ -13,8 +13,7 @@
     "flowbite": "^2.5.2",
     "next": "15.1.5",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-photo-collage": "^1.0.9"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@types/node": "^20",
