@@ -41,7 +41,7 @@ export default function MasonryGallery() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 bg-white">
       {/* Flowbite Masonry Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {photos.map((photo) => (
@@ -55,7 +55,7 @@ export default function MasonryGallery() {
                 alt={photo.title}
                 className="h-auto max-w-full rounded-lg"
               />
-              <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/60 to-transparent">
+              <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/40 to-transparent">
                 <h3 className="text-white text-sm font-medium truncate">
                   {photo.title}
                 </h3>
@@ -68,7 +68,7 @@ export default function MasonryGallery() {
       {/* Dialog for Selected Photo */}
       <Dialog open={!!selectedPhoto} onOpenChange={() => setSelectedPhoto(null)}>
         {selectedPhoto && (
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-2xl bg-white">
             <DialogHeader>
               <DialogTitle>{selectedPhoto.title}</DialogTitle>
             </DialogHeader>
@@ -79,7 +79,7 @@ export default function MasonryGallery() {
                 className="object-cover rounded-md"
               />
             </div>
-            <p className="text-muted-foreground mt-2">
+            <p className="text-gray-700 mt-2">
               {selectedPhoto.description}
             </p>
           </DialogContent>

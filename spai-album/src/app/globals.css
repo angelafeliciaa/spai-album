@@ -19,3 +19,26 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.all-timelines {
+  max-width: 90vw;
+  margin-left: -2vw;
+  column-gap: 2vw;
+  column-count: 3;
+  padding-bottom: 5vw;
+}
+
+.all-timlines-title {
+  margin-top: 4vw;
+}
+
+.timeline {
+  background-color: white;
+  display: inline-block;
+  margin-bottom: 1vw;
+  width: 24vw;
+  box-shadow: 0 0 20px rgba(0,0,0, 0.2);
+  border-radius: 10px;
+  padding: 1vw;
+  height: fit-content;
+}
